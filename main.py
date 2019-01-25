@@ -8,7 +8,7 @@ from telebot import types
 import inline_calendar
 
 
-tok='721457042:AAGe_mLnJV_aCKZimINalA6N5rBGKaV1fcE'
+
 bot = telebot.TeleBot(token=tok)
 
 
