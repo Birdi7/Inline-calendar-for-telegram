@@ -8,7 +8,7 @@ from telebot import types
 import inline_calendar
 
 
-tok='199586207:AAETqFv-D3EhFRmRr3pTWf_40DEzkepcFLg'
+tok='721457042:AAGe_mLnJV_aCKZimINalA6N5rBGKaV1fcE'
 bot = telebot.TeleBot(token=tok)
 
 
@@ -36,6 +36,7 @@ def calendar_callback_handler(q: types.CallbackQuery):
         if q.message.text != 'Wrong choice':
             bot.edit_message_text(text='Wrong choice', chat_id=q.from_user.id, message_id=q.message.message_id,
                                   reply_markup=inline_calendar.get_keyboard())
+    bot.answer_callback_query(q.id)
 
 
 if __name__ == '__main__':
