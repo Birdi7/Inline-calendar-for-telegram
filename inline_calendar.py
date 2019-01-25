@@ -1,26 +1,22 @@
 """
     Class for creating inline calendar
     Designed as a module for following singleton pattern
-    Works with `PyTelegramBotApi <https://github.com/eternnoir/pyTelegramBotAPI>'_
+    Works with PyTelegramBotApi https://github.com/eternnoir/pyTelegramBotAPI
 """
-from enum import Enum
-
 from telebot import types
 import datetime
 from calendar import monthrange
 
 
 # constants
-
 _INLINE_CALENDAR_NAME = 'inline_calendar'
 CALLBACK_WRONG_CHOICE = '{0}_wrong_choice'.format(_INLINE_CALENDAR_NAME)
 CALLBACK_PREVIOUS_MONTH = '{0}_previous_month'.format(_INLINE_CALENDAR_NAME)
 CALLBACK_NEXT_MONTH = '{0}_next_month'.format(_INLINE_CALENDAR_NAME)
-
 CALLBACK_DAYS = ['{}_day_{}'.format(_INLINE_CALENDAR_NAME, i) for i in range(32)]
 
 
-# inner vars
+# inner variables
 _current_date = None
 _min_date = None
 _max_date = None
@@ -71,21 +67,31 @@ def _dec_month():
     _current_date = prev_month_lastday.replace(day=1)
 
 
-def init_new(base_date, min_date, max_date, month_names, days_names):
+def init(base_date, min_date, max_date, month_names=None, days_names=None):
     """
-    :param base_date: a datetime object. Day must be equal to 1
-    :param min_date: a datetime object. Day must be equal to 1
-    :param max_date: a datetime object. Day must be equal to 1
-    :param month_names:
-    :param days_names:
-    :return:
+    Default language is English
+
+    :param base_date: a datetime.date object. Parameter 'day' will not be used
+    :param min_date: a datetime.date object. Parameter 'day' will not be used
+    :param max_date: a datetime.date object. Parameter 'day' will not be used
+    :param month_names: 12-element list for month names. If none, then English names will be used
+    :param days_names: 7-element list for month names. If none, then English names will be used
     """
     global _current_date, _min_date, _max_date, _MONTH_NAMES, _DAYS_NAMES
     _current_date = base_date
     _min_date = min_date
     _max_date = max_date
-    _MONTH_NAMES = ['-']+month_names
-    _DAYS_NAMES = days_names
+
+    _MONTH_NAMES = ['-']
+    if not month_names:
+        _MONTH_NAMES.extend(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'])
+    else:
+        _MONTH_NAMES.extend(month_names)
+
+    if not days_names:
+        _DAYS_NAMES = ['Mon', 'Tu', 'Wed', 'Th', 'Fr', 'Sat', 'Sun']
+    else:
+        _DAYS_NAMES = days_names
 
     _current_date = _current_date.replace(day=1)
     _max_date = _max_date.replace(day=1)
@@ -97,7 +103,7 @@ def init_new(base_date, min_date, max_date, month_names, days_names):
         raise Exception('Length of days names is not 7')
 
 
-def delete():
+def reset():
     global _current_date, _min_date, _max_date
     _current_date = _min_date = _max_date = None
 
@@ -140,6 +146,8 @@ def get_keyboard():
 
 
 def is_inline_calendar_callbackquery(query):
+    if not is_inited():
+        raise Exception('inline_calendar is not inited properly')
     return _check_callback(query.data)
 
 
@@ -152,6 +160,14 @@ class WrongChoiceCallbackException(Exception):
 
 
 def handler_callback(callback):
+    """
+    A method for handling callbacks
+    :param callback: callback from telebot.types.CallbackQuery
+    :return: datetime.date object if some date was picked else None
+    """
+    if not is_inited():
+        raise Exception('inline_calendar is not inited properly')
+
     if not _check_callback(callback):
         raise WrongCallbackException('Wrong callback is given for handling')
 
@@ -165,4 +181,3 @@ def handler_callback(callback):
 
     if callback in CALLBACK_DAYS:
         return _current_date.replace(day=int(callback.split('_')[-1]))
-
