@@ -8,8 +8,8 @@ from telebot import types
 import inline_calendar
 
 
-
-bot = telebot.TeleBot(token=tok)
+YOUR_TOKEN = ''
+bot = telebot.TeleBot(token=YOUR_TOKEN)
 
 
 @bot.message_handler(commands=['calendar'])
