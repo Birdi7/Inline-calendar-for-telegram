@@ -13,7 +13,7 @@ $ pip install pyTelegramBotAPI
 
 ### Examples
 
-[example.gif](example.gif) - A gif animation illustrating work of module
+[example.gif](images/example.gif) - A gif animation illustrating work of module
 
 [main.py](main.py) - A complete python bot which demonstates how to use the calendar
 
