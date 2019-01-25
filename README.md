@@ -15,7 +15,7 @@ $ pip install pyTelegramBotAPI
 
 [example.gif](example.gif) - A gif animation illustrating work of module
 
-[main.py](main.py] - A complete python bot which demonstates how to use the calendar
+[main.py](main.py) - A complete python bot which demonstates how to use the calendar
 
 ### Authors
 
