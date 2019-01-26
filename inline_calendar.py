@@ -6,6 +6,7 @@
 from telebot import types
 import datetime
 from calendar import monthrange
+import shelve
 
 
 # constants
@@ -15,13 +16,22 @@ CALLBACK_PREVIOUS_MONTH = '{0}_previous_month'.format(_INLINE_CALENDAR_NAME)
 CALLBACK_NEXT_MONTH = '{0}_next_month'.format(_INLINE_CALENDAR_NAME)
 CALLBACK_DAYS = ['{}_day_{}'.format(_INLINE_CALENDAR_NAME, i) for i in range(32)]
 
+#user vars
+_SHELVE_DB_NAME = ''
 
-# inner variables
-_current_date = None
-_min_date = None
-_max_date = None
-_MONTH_NAMES = []
-_DAYS_NAMES = []
+
+def _db_read_(chat_id, attr_name):
+    chat_id = str(chat_id)
+    attr_name = str(attr_name)
+    with shelve.open(_SHELVE_DB_NAME) as db:
+        return db[chat_id][attr_name]
+
+
+def _db_write_(chat_id, attr_name, data):
+    chat_id = str(chat_id)
+    attr_name = str(attr_name)
+    with shelve.open(_SHELVE_DB_NAME) as db:
+        db[chat_id][attr_name] = data
 
 
 def _create_header():
