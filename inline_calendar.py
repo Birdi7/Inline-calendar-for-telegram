@@ -11,6 +11,11 @@ import shelve
 
 # constants
 _INLINE_CALENDAR_NAME = 'inline_calendar'
+_MIN_DATE = '_MIN_DATE'
+_MAX_DATE = '_MAX_DATE'
+_CURRENT_DATE = '_CURRENT_DATE'
+_MONTH_NAMES = '_MONTH_NAMES'
+_DAYS_NAMES = '_DAYS_NAMES0'
 CALLBACK_WRONG_CHOICE = '{0}_wrong_choice'.format(_INLINE_CALENDAR_NAME)
 CALLBACK_PREVIOUS_MONTH = '{0}_previous_month'.format(_INLINE_CALENDAR_NAME)
 CALLBACK_NEXT_MONTH = '{0}_next_month'.format(_INLINE_CALENDAR_NAME)
