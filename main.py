@@ -23,6 +23,8 @@ def calendar_test(msg: types.Message):
 
 @bot.callback_query_handler(func=inline_calendar.is_inline_calendar_callbackquery)
 def calendar_callback_handler(q: types.CallbackQuery):
+    bot.answer_callback_query(q.id)
+
     try:
         return_data = inline_calendar.handler_callback(q.from_user.id, q.data)
         if return_data is None:
@@ -36,7 +38,6 @@ def calendar_callback_handler(q: types.CallbackQuery):
     except inline_calendar.WrongChoiceCallbackException:
         bot.edit_message_text(text='Wrong choice', chat_id=q.from_user.id, message_id=q.message.message_id,
                               reply_markup=inline_calendar.get_keyboard(q.from_user.id))
-    bot.answer_callback_query(q.id)
 
 
 if __name__ == '__main__':

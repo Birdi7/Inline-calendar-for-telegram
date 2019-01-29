@@ -3,12 +3,12 @@
     Designed as a module for following singleton pattern
     Works with PyTelegramBotApi https://github.com/eternnoir/pyTelegramBotAPI
 """
-import logging
-from telebot import types
 import datetime
-from calendar import monthrange
+import logging
 import shelve
+from calendar import monthrange
 
+from telebot import types
 
 # constants
 _INLINE_CALENDAR_NAME = 'inline_calendar'
@@ -113,9 +113,9 @@ def init(chat_id, base_date, min_date, max_date,
     """
     Default language is English
     :param chat_id: chat id
-    :param base_date: a datetime.date object. Parameter 'day' will not be used
-    :param min_date: a datetime.date object. Parameter 'day' will not be used
-    :param max_date: a datetime.date object. Parameter 'day' will not be used
+    :param base_date: a datetime.date object.
+    :param min_date: a datetime.date object.
+    :param max_date: a datetime.date object.
     :param month_names: 12-element list for month names. If none, then English names will be used
     :param days_names: 7-element list fo2r month names. If none, then English names will be used
     :param db_name:
@@ -125,9 +125,9 @@ def init(chat_id, base_date, min_date, max_date,
         _SHELVE_DB_NAME = db_name
 
     _init_db(chat_id)
-    _db_write(chat_id, _CURRENT_DATE, base_date.replace(day=1))
-    _db_write(chat_id, _MIN_DATE, min_date.replace(day=1))
-    _db_write(chat_id, _MAX_DATE, max_date.replace(day=1))
+    _db_write(chat_id, _CURRENT_DATE, datetime.date(year=base_date.year, month=base_date.month, day=base_date.day))
+    _db_write(chat_id, _MIN_DATE, datetime.date(year=min_date.year, month=min_date.month, day=min_date.day))
+    _db_write(chat_id, _MAX_DATE, datetime.date(year=max_date.year, month=max_date.month, day=max_date.day))
 
     m_names = ['-']
     if not month_names:
@@ -163,6 +163,7 @@ def get_keyboard(chat_id):
     if not is_inited(chat_id):
         raise Exception('inline_calendar is not inited properly')
     c_date = _db_read(chat_id, _CURRENT_DATE)
+    min_date = _db_read(chat_id, _MIN_DATE)
 
     kb = types.InlineKeyboardMarkup()
     kb.row(*_create_header(chat_id))
@@ -178,8 +179,10 @@ def get_keyboard(chat_id):
         curr_date = datetime.date(day=i, month=c_date.month, year=c_date.year)
         if curr_date.weekday() == 0:
             rows.append([])
-
-        rows[-1].append(types.InlineKeyboardButton(text=i, callback_data=CALLBACK_DAYS[i]))
+        if curr_date < min_date:
+            rows[-1].append(types.InlineKeyboardButton(text=' ', callback_data=CALLBACK_WRONG_CHOICE))
+        else:
+            rows[-1].append(types.InlineKeyboardButton(text=i, callback_data=CALLBACK_DAYS[i]))
 
     curr_date = datetime.date(day=mrange[1], month=c_date.month, year=c_date.year)
 
