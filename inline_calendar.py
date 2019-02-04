@@ -165,12 +165,18 @@ def init(chat_id, base_date, min_date, max_date,
 
 
 def reset(chat_id):
+    chat_id = str(chat_id)
     _db_write(chat_id, _CURRENT_DATE, None)
     _db_write(chat_id, _MIN_DATE, None)
     _db_write(chat_id, _MAX_DATE, None)
 
 
 def is_inited(chat_id):
+    chat_id = str(chat_id)
+    with shelve.open(_SHELVE_DB_NAME) as db:
+        if chat_id not in db.keys():
+            return False
+
     return _db_read(chat_id, _CURRENT_DATE) is not None
 
 
