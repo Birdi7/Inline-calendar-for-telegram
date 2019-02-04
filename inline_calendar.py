@@ -10,6 +10,21 @@ from calendar import monthrange
 
 from telebot import types
 
+import config
+
+
+class WrongCallbackException(Exception):
+    pass
+
+
+class WrongChoiceCallbackException(Exception):
+    pass
+
+
+class NotInitedException(Exception):
+    pass
+
+
 # constants
 _INLINE_CALENDAR_NAME = 'inline_calendar'
 _MIN_DATE = '_MIN_DATE'
@@ -161,7 +176,7 @@ def is_inited(chat_id):
 
 def get_keyboard(chat_id):
     if not is_inited(chat_id):
-        raise Exception('inline_calendar is not inited properly')
+        raise NotInitedException('inline_calendar is not inited properly')
     c_date = _db_read(chat_id, _CURRENT_DATE)
     min_date = _db_read(chat_id, _MIN_DATE)
 
@@ -196,17 +211,7 @@ def get_keyboard(chat_id):
 
 
 def is_inline_calendar_callbackquery(query):
-    if not is_inited(query.from_user.id):
-        raise Exception('inline_calendar is not inited properly')
     return _check_callback(query.data)
-
-
-class WrongCallbackException(Exception):
-    pass
-
-
-class WrongChoiceCallbackException(Exception):
-    pass
 
 
 def handler_callback(chat_id, callback):
@@ -217,7 +222,7 @@ def handler_callback(chat_id, callback):
     :return: datetime.date object if some date was picked else None
     """
     if not is_inited(chat_id):
-        raise Exception('inline_calendar is not inited properly')
+        raise NotInitedException('inline_calendar is not inited properly')
 
     if not _check_callback(callback):
         raise WrongCallbackException('Wrong callback is given for handling')
