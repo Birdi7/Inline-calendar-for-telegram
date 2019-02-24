@@ -38,7 +38,7 @@ CALLBACK_NEXT_MONTH = '{0}_next_month'.format(_INLINE_CALENDAR_NAME)
 CALLBACK_DAYS = ['{}_day_{}'.format(_INLINE_CALENDAR_NAME, i) for i in range(32)]
 
 # user vars
-_SHELVE_DB_NAME = _INLINE_CALENDAR_NAME+'_shelve_db'
+_SHELVE_DB_NAME = config.inline_calendar_shelve_db_name
 
 
 def _db_read(chat_id, attr_name):
@@ -123,8 +123,7 @@ def _dec_month(chat_id):
 
 def init(chat_id, base_date, min_date, max_date,
          month_names=None,
-         days_names=None,
-         db_name=None):
+         days_names=None):
     """
     Default language is English
     :param chat_id: chat id
@@ -133,11 +132,7 @@ def init(chat_id, base_date, min_date, max_date,
     :param max_date: a datetime.date object.
     :param month_names: 12-element list for month names. If none, then English names will be used
     :param days_names: 7-element list fo2r month names. If none, then English names will be used
-    :param db_name:
     """
-    global _SHELVE_DB_NAME
-    if db_name:
-        _SHELVE_DB_NAME = db_name
 
     _init_db(chat_id)
     _db_write(chat_id, _CURRENT_DATE, datetime.date(year=base_date.year, month=base_date.month, day=base_date.day))
