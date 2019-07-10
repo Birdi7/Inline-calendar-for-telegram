@@ -1,16 +1,9 @@
-"""
-    Class for creating inline calendar
-    Designed as a module for following singleton pattern
-    Works with PyTelegramBotApi https://github.com/eternnoir/pyTelegramBotAPI
-"""
 import datetime
 import logging
 import shelve
 from calendar import monthrange
 
-from telebot import types
-
-import config
+from aiogram import types
 
 
 class WrongCallbackException(Exception):
@@ -38,7 +31,7 @@ CALLBACK_NEXT_MONTH = '{0}_next_month'.format(_INLINE_CALENDAR_NAME)
 CALLBACK_DAYS = ['{}_day_{}'.format(_INLINE_CALENDAR_NAME, i) for i in range(32)]
 
 # user vars
-_SHELVE_DB_NAME = config.inline_calendar_shelve_db_name
+_SHELVE_DB_NAME = "INLINE_CALENDAR_DB"
 
 
 def _db_read(chat_id, attr_name):
@@ -52,7 +45,6 @@ def _db_read(chat_id, attr_name):
         logging.log(level=logging.CRITICAL, msg='KeyError was raised while getting attribute {} for {}'
                                                 .format(attr_name, chat_id))
         # idk why it happens sometimes. Didn't see any affection on work of calendar
-        # if you know how to remove this try-except block, text me or collaborate
 
 
 def _db_write(chat_id, attr_name, data):
@@ -69,24 +61,31 @@ def _db_write(chat_id, attr_name, data):
 
 def _init_db(chat_id):
     chat_id = str(chat_id)
-    with shelve.open(_SHELVE_DB_NAME) as db:
+    with shelve.open(_SHELVE_DB_NAME, ) as db:
         db[chat_id] = {}
 
 
 def _create_header(chat_id):
+    result = []
+    c_date = _db_read(chat_id, _CURRENT_DATE)
+    result.append(types.InlineKeyboardButton(_db_read(chat_id, _MONTH_NAMES)[c_date.month] + ' ' + str(c_date.year),
+                                             callback_data=CALLBACK_WRONG_CHOICE))
+    return result
+
+
+def _create_bottom(chat_id):
     result = []
 
     c_date = _db_read(chat_id, _CURRENT_DATE)
     min_date = _db_read(chat_id, _MIN_DATE)
     max_date = _db_read(chat_id, _MAX_DATE)
     if c_date > min_date:
-        result.append(types.InlineKeyboardButton('<<', callback_data=CALLBACK_PREVIOUS_MONTH))
+        result.append(types.InlineKeyboardButton('<', callback_data=CALLBACK_PREVIOUS_MONTH))
     else:
         result.append(types.InlineKeyboardButton(' ', callback_data=CALLBACK_WRONG_CHOICE))
-    result.append(types.InlineKeyboardButton(_db_read(chat_id, _MONTH_NAMES)[c_date.month] + ' ' + str(c_date.year),
-                                             callback_data=CALLBACK_WRONG_CHOICE))
+    result.append(types.InlineKeyboardButton(' ', callback_data=CALLBACK_WRONG_CHOICE))
     if c_date < max_date:
-        result.append(types.InlineKeyboardButton('>>', callback_data=CALLBACK_NEXT_MONTH))
+        result.append(types.InlineKeyboardButton('>', callback_data=CALLBACK_NEXT_MONTH))
     else:
         result.append(types.InlineKeyboardButton(' ', callback_data=CALLBACK_WRONG_CHOICE))
 
@@ -133,6 +132,9 @@ def init(chat_id, base_date, min_date, max_date,
     :param month_names: 12-element list for month names. If none, then English names will be used
     :param days_names: 7-element list fo2r month names. If none, then English names will be used
     """
+
+    if not (min_date <= base_date<= max_date):
+        raise ValueError("Base_date is less than min_date or more than max_date")
 
     _init_db(chat_id)
     _db_write(chat_id, _CURRENT_DATE, datetime.date(year=base_date.year, month=base_date.month, day=base_date.day))
@@ -198,7 +200,7 @@ def get_keyboard(chat_id):
         if curr_date < min_date:
             rows[-1].append(types.InlineKeyboardButton(text=' ', callback_data=CALLBACK_WRONG_CHOICE))
         else:
-            rows[-1].append(types.InlineKeyboardButton(text=i, callback_data=CALLBACK_DAYS[i]))
+            rows[-1].append(types.InlineKeyboardButton(text=str(i), callback_data=CALLBACK_DAYS[i]))
 
     curr_date = datetime.date(day=mrange[1], month=c_date.month, year=c_date.year)
 
@@ -208,6 +210,7 @@ def get_keyboard(chat_id):
     for r in rows:
         kb.row(*r)
 
+    kb.row(*_create_bottom(chat_id))
     return kb
 
 
@@ -229,7 +232,7 @@ def handler_callback(chat_id, callback):
         raise WrongCallbackException('Wrong callback is given for handling')
 
     if callback == CALLBACK_WRONG_CHOICE:
-        raise WrongChoiceCallbackException()
+        return None
 
     c_date = _db_read(chat_id, _CURRENT_DATE)
     min_date = _db_read(chat_id, _MIN_DATE)
