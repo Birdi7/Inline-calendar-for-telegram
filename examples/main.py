@@ -10,9 +10,9 @@ import inline_calendar
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-YOUR_TOKEN = ''
+YOUR_TOKEN = '199586207:AAGDqvkXcUvV9ImEF00H-LUwtDBz5YIWjBs'
 
-bot = Bot(token=YOUR_TOKEN)
+bot = Bot(token=YOUR_TOKEN, proxy='socks5://localhost:8123')
 dp = Dispatcher(bot, storage=MemoryStorage())
 
 

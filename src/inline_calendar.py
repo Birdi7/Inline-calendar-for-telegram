@@ -49,7 +49,7 @@ CALLBACK_DAYS = [CALLBACK.new(action=Actions.PICK_DAY.name, data=i) for i in ran
 _SHELVE_DB_NAME = "INLINE_CALENDAR_DB"
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 
 def _db_read(chat_id: str, attr_name: str):

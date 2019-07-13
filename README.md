@@ -15,11 +15,8 @@ $ pip install aiogram
 
 [example.gif](images/example.gif) - A gif animation illustrating work of module
 
-[main.py](main.py) - A complete python bot which demonstrates how to use the calendar
+[main.py](examples/main.py) - A complete python bot which demonstrates how to use the calendar
 
-### Authors
-
-* **Artemis Fowl** - [Telegram](https://t.me/a_fowl)
 
 ## License
 
