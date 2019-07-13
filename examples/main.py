@@ -5,14 +5,14 @@ from aiogram import types, Bot, Dispatcher, executor
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.utils.exceptions import MessageNotModified
 
-import inline_calendar
+import src.inline_calendar as inline_calendar
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-YOUR_TOKEN = '199586207:AAGDqvkXcUvV9ImEF00H-LUwtDBz5YIWjBs'
+YOUR_TOKEN = 'TOKEN'
 
-bot = Bot(token=YOUR_TOKEN, proxy='socks5://localhost:8123')
+bot = Bot(token=YOUR_TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
 
