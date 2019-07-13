@@ -4,22 +4,22 @@ My own implementation for inline calendar in telegram.
 
 ### Prerequisites
 
-[PyTelegramBotApi](https://github.com/eternnoir/pyTelegramBotAPI) - a telegram bot api wrapper
+[aiogram](https://github.com/aiogram/aiogram) - a telegram bot api wrapper
 
 * Installing using pip:
 ```
-$ pip install pyTelegramBotAPI
+$ pip install aiogram
 ```
 
 ### Examples
 
 [example.gif](images/example.gif) - A gif animation illustrating work of module
 
-[main.py](main.py) - A complete python bot which demonstates how to use the calendar
+[main.py](main.py) - A complete python bot which demonstrates how to use the calendar
 
 ### Authors
 
-* **Artemis Fowl** - [Gitlab](https://gitlab.com/a_fowl), [Telegram](https://t.me/a_fowl)
+* **Artemis Fowl** - [Telegram](https://t.me/a_fowl)
 
 ## License
 
