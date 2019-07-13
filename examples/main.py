@@ -5,7 +5,7 @@ from aiogram import types, Bot, Dispatcher, executor
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.utils.exceptions import MessageNotModified
 
-import src.inline_calendar as inline_calendar
+import inline_calendar as inline_calendar
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
