@@ -13,7 +13,7 @@ $ pip install aiogram
 
 ### Examples
 
-[example.gif](images/example.gif) - A gif animation illustrating work of module
+[example.png](images/example.png) - An image of calendar
 
 [main.py](examples/main.py) - A complete python bot which demonstrates how to use the calendar
 
