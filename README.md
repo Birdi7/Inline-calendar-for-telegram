@@ -4,12 +4,10 @@ My own implementation for inline calendar in telegram.
 
 ### Prerequisites
 
-[aiogram](https://github.com/aiogram/aiogram) - a telegram bot api wrapper
-
-* Installing using pip:
-```
-$ pip install aiogram
-```
+Installing:
+`
+pip install https://github.com/Birdi7/Inline-calendar-for-telegram/archive/master.zip
+`
 
 ### Examples
 
@@ -17,6 +15,10 @@ $ pip install aiogram
 
 [main.py](examples/main.py) - A complete python bot which demonstrates how to use the calendar
 
+### Persistence of data
+
+The calendar stores the data in-memory while running.
+If you want your data to be persistent, call `inline_calendar.close()` before shutting down
 
 ## License
 
