@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="inline-calendar",
+    name="inline_calendar",
     version="0.0.1",
     author="Egor birdi7",
     author_email="egor.birdi7@gmail.com",
