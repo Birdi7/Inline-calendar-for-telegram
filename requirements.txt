@@ -1,1 +1,2 @@
 aiogram==2.2
+python-dateutil==2.8.0
