@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="inline-calendar",
-    version="0.0.1",
+    version="0.1",
     author="Egor birdi7",
     author_email="egor.birdi7@gmail.com",
     description="An inline calendar for telegram using aiogram",
