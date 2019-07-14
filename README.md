@@ -17,8 +17,8 @@ pip install https://github.com/Birdi7/Inline-calendar-for-telegram/archive/maste
 
 ### Persistence of data
 
-The calendar stores the data in-memory while running.
-If you want your data to be persistent, call `inline_calendar.close()` before shutting down
+The calendar stores the data in-memory.
+No persistence available.
 
 ## License
 
