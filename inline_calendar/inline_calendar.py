@@ -47,10 +47,10 @@ class InlineCalendarData:
 class InlineCalendar:
     # constants
     _CALLBACK_DATA_PREFIX = 'inline_calendar'
-    CALLBACK = CallbackData(_CALLBACK_DATA_PREFIX, 'action', 'data')
-    CALLBACK_WRONG_CHOICE = CALLBACK.new(action=Actions.WRONG_CHOICE.name, data='-')
-    CALLBACK_PREVIOUS_MONTH = CALLBACK.new(action=Actions.PREVIOUS_MONTH.name, data='-')
-    CALLBACK_NEXT_MONTH = CALLBACK.new(action=Actions.NEXT_MONTH.name, data='-')
+    BASE_CALLBACK = CallbackData(_CALLBACK_DATA_PREFIX, 'action', 'data')
+    CALLBACK_WRONG_CHOICE = BASE_CALLBACK.new(action=Actions.WRONG_CHOICE.name, data='-')
+    CALLBACK_PREVIOUS_MONTH = BASE_CALLBACK.new(action=Actions.PREVIOUS_MONTH.name, data='-')
+    CALLBACK_NEXT_MONTH = BASE_CALLBACK.new(action=Actions.NEXT_MONTH.name, data='-')
     __MAX_DAYS_IN_MONTH = 32
 
     def __init__(self, db_name: Optional[Path] = None):
@@ -82,7 +82,7 @@ class InlineCalendar:
                    ]
         return buttons
 
-    def _create_bottom(self, chat_id: int):
+    def _create_bottom(self, chat_id: int) -> List[types.InlineKeyboardButton]:
         result = []
         user_info = self._get_user_info(chat_id=chat_id)
 
@@ -189,7 +189,7 @@ class InlineCalendar:
             if curr_date < user_info.min_date:
                 rows[-1].append(types.InlineKeyboardButton(text=' ', callback_data=InlineCalendar.CALLBACK_WRONG_CHOICE))
             else:
-                rows[-1].append(types.InlineKeyboardButton(text=str(i), callback_data=InlineCalendar.CALLBACK.new(
+                rows[-1].append(types.InlineKeyboardButton(text=str(i), callback_data=InlineCalendar.BASE_CALLBACK.new(
                     action=Actions.PICK_DAY.name, data=str(i)
                 )))
 
@@ -205,7 +205,7 @@ class InlineCalendar:
         return kb
 
     def filter(self, **config) -> CallbackDataFilter:
-        return InlineCalendar.CALLBACK.filter(**config)
+        return InlineCalendar.BASE_CALLBACK.filter(**config)
 
     def handle_callback(self, chat_id: int, callback_data: Dict[str, str]):
         """
