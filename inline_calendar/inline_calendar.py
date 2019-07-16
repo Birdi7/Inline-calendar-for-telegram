@@ -3,7 +3,6 @@ import logging
 from calendar import monthrange
 from dataclasses import dataclass
 from enum import Enum, auto
-from pathlib import Path
 from typing import List, Dict, Optional
 
 from aiogram import types
@@ -187,7 +186,8 @@ class InlineCalendar:
             if curr_date.weekday() == 0:
                 rows.append([])
             if curr_date < user_info.min_date:
-                rows[-1].append(types.InlineKeyboardButton(text=' ', callback_data=InlineCalendar.CALLBACK_WRONG_CHOICE))
+                rows[-1].append(types.InlineKeyboardButton(text=' ',
+                                                           callback_data=InlineCalendar.CALLBACK_WRONG_CHOICE))
             else:
                 rows[-1].append(types.InlineKeyboardButton(text=str(i), callback_data=InlineCalendar.BASE_CALLBACK.new(
                     action=Actions.PICK_DAY.name, data=str(i)
