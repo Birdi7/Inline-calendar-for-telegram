@@ -68,7 +68,7 @@ class InlineCalendar:
         user_info = self._get_user_info(chat_id=chat_id)
 
         buttons = [types.InlineKeyboardButton("{month} {year}".format(
-            month=user_info.month_names[user_info.current_date.month],
+            month=user_info.month_names[user_info.current_date.month-1],
             year=user_info.current_date.year), callback_data=InlineCalendar.CALLBACK_WRONG_CHOICE)
                    ]
         return buttons
