@@ -52,16 +52,8 @@ class InlineCalendar:
     CALLBACK_NEXT_MONTH = BASE_CALLBACK.new(action=Actions.NEXT_MONTH.name, data='-')
     __MAX_DAYS_IN_MONTH = 32
 
-    def __init__(self, db_name: Optional[Path] = None):
-        """
-        :param db_name: if back
-        :param restore: restore from backup if available
-        """
-        if db_name is None:
-            db_name = Path().cwd() / "inline_calendar_db.json"
-        self.db_name = db_name
-
-        self.data: Dict[int, str] = {}
+    def __init__(self):
+        self.data: Dict[int, InlineCalendarData] = {}
 
     def _get_user_info(self, chat_id: int) -> Optional[InlineCalendarData]:
         return self.data.get(chat_id, None)
