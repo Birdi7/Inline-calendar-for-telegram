@@ -3,7 +3,7 @@ import logging
 from calendar import monthrange
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Union
 
 from aiogram import types
 from aiogram.types import User
@@ -15,10 +15,6 @@ logger.setLevel(logging.DEBUG)
 
 
 class WrongCallbackException(Exception):
-    pass
-
-
-class WrongChoiceCallbackException(Exception):
     pass
 
 
@@ -58,11 +54,8 @@ class InlineCalendar:
     def _get_user_info(self, chat_id: int) -> Optional[InlineCalendarData]:
         return self.data.get(chat_id, None)
 
-    def _set_user_info(self, chat_id: int, user_data: InlineCalendarData):
+    def _set_user_info(self, chat_id: int, user_data: Optional[InlineCalendarData]):
         self.data[chat_id] = user_data
-
-    def _db_delete(self, chat_id: int):
-        del self.data[chat_id]
 
     def _create_header(self, chat_id: int) -> List[types.InlineKeyboardButton]:
         user_info = self._get_user_info(chat_id=chat_id)
@@ -147,7 +140,7 @@ class InlineCalendar:
     def reset(self, chat_id: Optional[int] = None):
         if chat_id is None:
             chat_id = User.get_current().id
-        self._db_delete(chat_id)
+        self._set_user_info(chat_id, None)
 
     def is_inited(self, chat_id: Optional[int] = None):
         if chat_id is None:
@@ -199,7 +192,7 @@ class InlineCalendar:
     def filter(self, **config) -> CallbackDataFilter:
         return InlineCalendar.BASE_CALLBACK.filter(**config)
 
-    def handle_callback(self, chat_id: int, callback_data: Dict[str, str]):
+    def handle_callback(self, chat_id: int, callback_data: Union[Dict[str, str], str]):
         """
         A method for handling callbacks
         :param chat_id: chat id of user
@@ -209,6 +202,14 @@ class InlineCalendar:
 
         if not self.is_inited(chat_id):
             raise NotInitedException('inline_calendar is not inited properly')
+        if isinstance(callback_data, str):
+            try:
+                callback_data = InlineCalendar.BASE_CALLBACK.parse(callback_data)
+            except ValueError:
+                raise WrongCallbackException
+        action, data = callback_data.get('action', None), callback_data.get('data', None)
+        if action is None or data is None:
+            raise WrongCallbackException("No action or no data in callback_data.")
 
         user_info = self._get_user_info(chat_id)
         if callback_data['action'] == Actions.PREVIOUS_MONTH.name and user_info.current_date > user_info.min_date:
