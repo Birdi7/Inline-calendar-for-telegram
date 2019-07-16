@@ -64,8 +64,8 @@ class InlineCalendar:
 
         self.data: Dict[int, str] = {}
 
-    def _get_user_info(self, chat_id: int) -> InlineCalendarData:
-        return self.data[chat_id]
+    def _get_user_info(self, chat_id: int) -> Optional[InlineCalendarData]:
+        return self.data.get(chat_id, None)
 
     def _set_user_info(self, chat_id: int, user_data: InlineCalendarData):
         self.data[chat_id] = user_data
@@ -161,7 +161,7 @@ class InlineCalendar:
     def is_inited(self, chat_id: Optional[int] = None):
         if chat_id is None:
             chat_id = User.get_current().id
-        return chat_id in self.data
+        return self._get_user_info(chat_id) is not None
 
     def get_keyboard(self, chat_id: Optional[int] = None):
         if chat_id is None:
