@@ -9,9 +9,11 @@ Installing:
 pip install https://github.com/Birdi7/Inline-calendar-for-telegram/archive/master.zip
 `
 
-### Examples
+### How it looks like?
 
-[example.png](images/example.png) - An image of calendar
+![example.png](images/example.png)
+
+### Examples 
 
 [main.py](examples/main.py) - A complete python bot which demonstrates how to use the calendar
 
