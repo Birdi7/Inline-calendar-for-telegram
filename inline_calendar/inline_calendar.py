@@ -225,7 +225,7 @@ class InlineCalendar:
         raise NotImplementedError
 
     def _read_info(self):
-        raise NotImplemented
+        raise NotImplementedError
 
     def _write_info(self, destination):
-        raise NotImplemented
+        raise NotImplementedError
